@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Leaderboard</title>
+</head>
+
+<body>
+
+  <style>
+    body {
+      background-color: rgba(224, 190, 255, 0.74);
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      padding: 30px;
+      margin-top: 30px;
+    }
+
+    .buttons{
+      width: 80px;
+      cursor: pointer;
+      text-transform: uppercase;
+      font-weight: bold;
+      border: 1px solid black;
+    }
+
+    .moveRight{
+      margin-left: 20px;
+    }
+
+    table,
+    th,
+    td {
+      border: 1px  black;
+      width: 800px;
+      margin-top: 30px;
+    }
+
+    th {
+      cursor: pointer;
+    }
+
+    h1{
+      text-align: center;
+      padding-top: 20px;
+    }
+
+    #colHeader{
+      background-color: rgb(198, 137, 255);
+    }
+
+    #tableStudents{
+      text-align: center;
+      background-color: white;
+    }
+  </style>
+
+  <div class='container'>
+
+    <form action="/searchstudent">
+      <label for="id">Search Student ID:</label>
+      <input type="text" id="id" name="id">
+      <input  type="submit" value="search" class="buttons">
+    </form>
+    <br>
+
+    <form action="/deletestudent">
+      <label for="id">Delete Student ID:</label>
+      <input type="text" id="id" name="id">
+      <input type="submit" value="delete" class="buttons">
+    </form>
+    <br>
+
+
+    <form action="/updatestudent">
+      <label for="id">Update Student ID:</label>
+      <input type="text" id="id" name="id">
+      <label for="points" class="moveRight">Update Student points:</label>
+      <input type="text" id="points" name="points">
+      <input type="submit" value="update" class="buttons">
+    </form>
+    <br>
+
+    <form action="/insertStudent">
+      <label for="name">Add New Students:</label>
+      <input name="name" id="name"></textarea>
+      <label for="points" class="moveRight">Add New Students points:</label>
+      <input name="points" id="points"></textarea>
+      <input type="submit" value="insert" class="buttons">
+    </form>
+
+    <h1>
+      Leaderboard
+    </h1>
+
+    <table>
+
+      <tr id="colHeader">
+        <th>ID</th>
+        <th>Name</th>
+        <th>Points</th>
+      </tr>
+
+      <% for(var i=0; i < students.length; i++) { %>
+      <tr id="tableStudents">
+        <td>
+          <%=students[i].id%>
+        </td>
+        <td>
+          <%=students[i].name%>
+        </td>
+        <td>
+          <%=students[i].points%>
+        </td>
+      </tr>
+      <% } %>
+
+    </table>
+  </div>
+
+  <script>
+    //sorting html table code gotten from: https://stackoverflow.com/questions/14267781/sorting-html-table-with-javascript
+
+    const getCellValue = (tr, idx) => tr.children[idx].innerText || tr.children[idx].textContent;
+    const comparer = (idx, asc) => (a, b) => ((v1, v2) =>
+      v1 !== '' && v2 !== '' && !isNaN(v1) && !isNaN(v2) ? v1 - v2 : v1.toString().localeCompare(v2)
+    )(getCellValue(asc ? a : b, idx), getCellValue(asc ? b : a, idx));
+    // do the work...
+    document.querySelectorAll('th').forEach(th => th.addEventListener('click', (() => {
+      const table = th.closest('table');
+      Array.from(table.querySelectorAll('tr:nth-child(n+2)'))
+        .sort(comparer(Array.from(th.parentNode.children).indexOf(th), this.asc = !this.asc))
+        .forEach(tr => table.appendChild(tr));
+    })));
+  </script>
+</body>
+
+</html>
